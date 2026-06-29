@@ -1,0 +1,18 @@
+# Secrets
+.env
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Cognee system data (local DB files)
+**/.cognee_system/
+
+# OS
+.DS_Store
+Thumbs.db

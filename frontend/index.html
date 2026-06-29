@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Learning Companion</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --bg2: #1a1d27;
+      --bg3: #222638;
+      --border: #2e3347;
+      --text: #e2e8f0;
+      --text2: #8892a4;
+      --accent: #4f8ef7;
+      --accent2: #3b6fd4;
+      --green: #4ade80;
+      --red: #f87171;
+      --yellow: #fbbf24;
+    }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 240px;
+      min-width: 240px;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 12px;
+      gap: 8px;
+    }
+
+    .sidebar h1 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+      padding: 4px 8px 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-label {
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      color: var(--text2);
+      padding: 6px 8px 2px;
+      text-transform: uppercase;
+    }
+
+    .mode-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text2);
+      transition: background 0.15s, color 0.15s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .mode-btn:hover { background: var(--bg3); color: var(--text); }
+    .mode-btn.active { background: var(--bg3); color: var(--accent); font-weight: 600; }
+
+    .mode-btn .icon { font-size: 15px; width: 20px; text-align: center; }
+
+    .sidebar-spacer { flex: 1; }
+
+    .danger-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--red);
+      border: 1px solid transparent;
+      background: none;
+      width: 100%;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .danger-btn:hover { border-color: var(--red); background: rgba(248,113,113,0.05); }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg2);
+    }
+    .topbar h2 { font-size: 15px; font-weight: 600; }
+    .topbar .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--bg3);
+      color: var(--text2);
+    }
+
+    /* ── Chat panel ── */
+    #panel-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      display: flex;
+      gap: 10px;
+      max-width: 760px;
+    }
+    .msg.user { flex-direction: row-reverse; align-self: flex-end; }
+
+    .msg-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .msg.user .msg-avatar { background: var(--accent2); }
+
+    .msg-bubble {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.55;
+      background: var(--bg3);
+      max-width: 600px;
+    }
+    .msg.user .msg-bubble { background: var(--accent2); color: #fff; }
+
+    .msg-sources {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text2);
+    }
+    .msg-sources b { color: var(--text); }
+
+    .chat-input-row {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      background: var(--bg2);
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .chat-input:focus { border-color: var(--accent); }
+    .chat-input::placeholder { color: var(--text2); }
+
+    .send-btn {
+      padding: 10px 18px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+    .send-btn:hover { background: var(--accent2); }
+    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Study panel ── */
+    #panel-study {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .panel-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .panel-subtitle { font-size: 13px; color: var(--text2); }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+
+    textarea {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: var(--accent); }
+
+    input[type="text"], input[type="url"] {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    input[type="text"]:focus, input[type="url"]:focus { border-color: var(--accent); }
+
+    .topic-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--text2);
+    }
+    .topic-row input { flex: 1; }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: var(--accent2); }
+    .btn-success { background: var(--green); color: #000; }
+
+    .file-drop {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      color: var(--text2);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .file-drop:hover, .file-drop.drag-over {
+      border-color: var(--accent);
+      background: rgba(79,142,247,0.04);
+    }
+    .file-drop input { display: none; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+    .toast.success { background: #14532d; color: var(--green); border: 1px solid var(--green); }
+    .toast.error { background: #450a0a; color: var(--red); border: 1px solid var(--red); }
+    .toast.info { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+
+    /* ── Quiz panel ── */
+    #panel-quiz {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .quiz-question {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .quiz-question p { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-option {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.15s, border-color 0.15s;
+      background: var(--bg3);
+    }
+    .quiz-option:hover:not(.revealed) { border-color: var(--accent); }
+    .quiz-option.correct { background: rgba(74,222,128,0.1); border-color: var(--green); color: var(--green); }
+    .quiz-option.wrong { background: rgba(248,113,113,0.08); border-color: var(--red); color: var(--red); }
+
+    .score-bar {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+    }
+    .score-num { font-size: 28px; font-weight: 700; color: var(--accent); }
+
+    .hidden { display: none !important; }
+
+    /* ── Topic chips ── */
+    .topics-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 4px;
+    }
+    .topic-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: var(--bg3);
+      font-size: 12px;
+      color: var(--text2);
+      cursor: default;
+    }
+    .topic-chip span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .topic-chip button {
+      background: none; border: none; cursor: pointer; color: var(--text2);
+      font-size: 13px; padding: 0 2px; line-height: 1;
+      flex-shrink: 0;
+    }
+    .topic-chip button:hover { color: var(--red); }
+    .topics-empty { font-size: 11px; color: var(--text2); padding: 4px 8px; opacity: 0.6; }
+
+    /* ── Spinner inside buttons ── */
+    .spinner {
+      display: inline-block; width: 12px; height: 12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 4px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <h1>📚 Learning Companion</h1>
+
+  <span class="sidebar-label">Modes</span>
+  <button class="mode-btn active" onclick="switchMode('chat')" id="btn-chat">
+    <span class="icon">💬</span> Ask Memory
+  </button>
+  <button class="mode-btn" onclick="switchMode('study')" id="btn-study">
+    <span class="icon">✏️</span> Study
+  </button>
+  <button class="mode-btn" onclick="switchMode('quiz')" id="btn-quiz">
+    <span class="icon">🧠</span> Quiz Me
+  </button>
+
+  <span class="sidebar-label" style="margin-top:8px">Memory</span>
+  <button class="mode-btn" onclick="switchMode('graph')" id="btn-graph">
+    <span class="icon">🕸️</span> Memory Graph
+  </button>
+  <button class="mode-btn" onclick="improveMemory()" id="btn-improve">
+    <span class="icon">⚡</span> Enrich Graph
+  </button>
+
+  <span class="sidebar-label" style="margin-top:4px">Topics Studied</span>
+  <div class="topics-list" id="topics-list">
+    <div class="topics-empty">No topics yet</div>
+  </div>
+
+  <div class="sidebar-spacer"></div>
+
+  <button class="danger-btn" onclick="forgetAll()">
+    <span class="icon">🗑️</span> Forget Everything
+  </button>
+</nav>
+
+<!-- Main area -->
+<main class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <h2 id="topbar-title">Ask Memory</h2>
+    <span class="badge" id="topbar-badge">Chat with your knowledge</span>
+  </div>
+
+  <!-- ── Chat panel ── -->
+  <div id="panel-chat" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
+    <div class="messages" id="messages">
+      <div class="msg">
+        <div class="msg-avatar">🤖</div>
+        <div class="msg-bubble">
+          Hi! I'm your study assistant. Ask me anything you've already studied — I'll recall it from memory.<br><br>
+          <em style="color:var(--text2)">Haven't studied anything yet? Switch to <strong>Study</strong> mode first.</em>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chat-input" placeholder="Ask a question from your memory…" onkeydown="if(event.key==='Enter')sendQuestion()"/>
+      <button class="send-btn" id="send-btn" onclick="sendQuestion()">Send</button>
+    </div>
+  </div>
+
+  <!-- ── Study panel ── -->
+  <div id="panel-study">
+    <div>
+      <div class="panel-title">Study Material</div>
+      <div class="panel-subtitle">Feed notes, paste text, upload a file, or give a URL. Cognee stores it as persistent memory.</div>
+    </div>
+
+    <!-- Text input -->
+    <div class="card">
+      <h3>📝 Paste Text / Notes</h3>
+      <div class="topic-row">
+        <span>Topic:</span>
+        <input type="text" id="text-topic" placeholder="e.g. machine-learning" value="default"/>
+      </div>
+      <textarea id="study-text" rows="5" placeholder="Paste your notes, a paragraph, or any text you want to remember…"></textarea>
+      <br/><br/>
+      <button class="btn btn-primary" id="btn-study-text" onclick="studyText()">Store in Memory</button>
+    </div>
+
+    <!-- File upload -->
+    <div class="card">
+      <h3>📄 Upload File (.txt or .pdf)</h3>
+      <div class="topic-row">
+        <span>Topic:</span>
+        <input type="text" id="file-topic" placeholder="e.g. history" value="default"/>
+      </div>
+      <div class="file-drop" id="file-drop" onclick="document.getElementById('file-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleFileDrop(event)">
+        <input type="file" id="file-input" accept=".txt,.pdf" onchange="uploadFile(this.files[0])"/>
+        <div id="file-label">Click to choose or drag a .txt / .pdf file here</div>
+      </div>
+    </div>
+
+    <!-- URL -->
+    <div class="card">
+      <h3>🌐 Fetch from URL</h3>
+      <div class="topic-row">
+        <span>Topic:</span>
+        <input type="text" id="url-topic" placeholder="e.g. news" value="default"/>
+      </div>
+      <input type="url" id="study-url" placeholder="https://en.wikipedia.org/wiki/..."/>
+      <br/><br/>
+      <button class="btn btn-primary" id="btn-study-url" style="margin-top:10px" onclick="studyUrl()">Fetch & Store</button>
+    </div>
+  </div>
+
+  <!-- ── Quiz panel ── -->
+  <div id="panel-quiz">
+    <div>
+      <div class="panel-title">Quiz Me</div>
+      <div class="panel-subtitle">Enter a topic you've studied — I'll generate questions from your memory.</div>
+    </div>
+
+    <div class="card" id="quiz-setup">
+      <h3>🎯 Generate Quiz</h3>
+      <div class="topic-row">
+        <span>Topic:</span>
+        <input type="text" id="quiz-topic" placeholder="e.g. transformers"/>
+        <input type="number" id="quiz-count" value="5" min="1" max="10" style="width:60px"/>
+        <span style="font-size:12px;color:var(--text2)">questions</span>
+      </div>
+      <button class="btn btn-primary" id="btn-gen-quiz" onclick="generateQuiz()">Generate Quiz</button>
+    </div>
+
+    <div id="quiz-score-bar" class="score-bar hidden">
+      <span class="score-num" id="score-num">0</span>
+      <div>
+        <div style="font-weight:600">Score</div>
+        <div style="font-size:12px;color:var(--text2)" id="score-label">0 of 0 correct</div>
+      </div>
+      <div style="flex:1"></div>
+      <button class="btn btn-primary" onclick="generateQuiz()">Retry</button>
+    </div>
+
+    <div id="quiz-questions"></div>
+  </div>
+
+  <!-- ── Memory Graph panel ── -->
+  <div id="panel-graph" style="flex:1;display:none;flex-direction:column;overflow:hidden;">
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2);">
+      <span style="font-size:14px;font-weight:600;">Memory Graph</span>
+      <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--text2);" id="graph-node-count">—</span>
+      <div style="flex:1"></div>
+      <button class="btn btn-primary" style="font-size:12px;padding:6px 14px;" onclick="loadGraph()">↺ Refresh</button>
+    </div>
+    <div style="flex:1;position:relative;overflow:hidden;" id="graph-container">
+      <svg id="graph-svg" style="width:100%;height:100%;"></svg>
+      <div id="graph-tooltip" style="position:absolute;background:rgba(0,0,0,0.85);color:#e2e8f0;padding:8px 12px;border-radius:6px;font-size:12px;pointer-events:none;opacity:0;transition:opacity 0.15s;border:1px solid #2e3347;max-width:220px;"></div>
+      <div id="graph-legend" style="position:absolute;bottom:16px;left:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:11px;"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'http://localhost:8001';
+  let quizAnswers = {};
+  let quizData = [];
+
+  // ── Topic management (localStorage) ──
+  const TOPICS_KEY = 'lc_topics';
+
+  function getTopics() {
+    try { return JSON.parse(localStorage.getItem(TOPICS_KEY) || '[]'); } catch { return []; }
+  }
+  function saveTopics(arr) { localStorage.setItem(TOPICS_KEY, JSON.stringify([...new Set(arr)])); }
+
+  function addTopic(name) {
+    if (!name || name === 'default') return;
+    const topics = getTopics();
+    if (!topics.includes(name)) { topics.push(name); saveTopics(topics); }
+    renderTopics();
+  }
+
+  function renderTopics() {
+    const list = document.getElementById('topics-list');
+    const topics = getTopics();
+    if (!topics.length) {
+      list.innerHTML = '<div class="topics-empty">No topics yet</div>';
+      return;
+    }
+    list.innerHTML = topics.map(t => `
+      <div class="topic-chip">
+        <span title="${t}">📌 ${t}</span>
+        <button onclick="forgetTopic('${t}')" title="Forget this topic">×</button>
+      </div>`).join('');
+  }
+
+  async function forgetTopic(name) {
+    if (!confirm(`Forget topic "${name}"?`)) return;
+    const res = await fetch(`${API}/forget`, {
+      method: 'DELETE', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ topic: name }),
+    });
+    const json = await res.json();
+    toast(json.message, res.ok ? 'success' : 'error');
+    if (res.ok) {
+      saveTopics(getTopics().filter(t => t !== name));
+      renderTopics();
+    }
+  }
+
+  // ── Button loading helper ──
+  function setBtnLoading(id, loading, label) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.innerHTML = loading ? `<span class="spinner"></span>${label}` : label;
+  }
+
+  // ── Panel switching ──
+  function switchMode(mode) {
+    ['chat','study','quiz'].forEach(m => {
+      document.getElementById(`panel-${m}`).style.display = 'none';
+      document.getElementById(`btn-${m}`).classList.remove('active');
+    });
+    document.getElementById(`panel-${mode}`).style.display = 'flex';
+    document.getElementById(`btn-${mode}`).classList.add('active');
+
+    const titles = { chat: ['Ask Memory','Chat with your knowledge'], study: ['Study','Feed notes into memory'], quiz: ['Quiz Me','Test what you know'] };
+    document.getElementById('topbar-title').textContent = titles[mode][0];
+    document.getElementById('topbar-badge').textContent = titles[mode][1];
+  }
+
+  // ── Toast ──
+  function toast(msg, type='info') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} show`;
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  // ── Chat ──
+  function addMessage(role, text, sources=[]) {
+    const msgs = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    const avatar = role === 'user' ? '👤' : '🤖';
+    let sourcesHtml = '';
+    if (sources.length) {
+      sourcesHtml = `<div class="msg-sources"><b>Sources from memory:</b><br>${sources.map(s => `• ${s.slice(0,120)}…`).join('<br>')}</div>`;
+    }
+    div.innerHTML = `<div class="msg-avatar">${avatar}</div><div class="msg-bubble"><span id="bubble-${Date.now()}">${text}</span>${sourcesHtml}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div.querySelector('span');
+  }
+
+  async function sendQuestion() {
+    const input = document.getElementById('chat-input');
+    const btn = document.getElementById('send-btn');
+    const q = input.value.trim();
+    if (!q) return;
+
+    addMessage('user', q);
+    input.value = '';
+    btn.disabled = true;
+
+    document.getElementById('send-btn').innerHTML = '<span class="spinner"></span>';
+    const thinkingSpan = addMessage('assistant', '🔍 Searching memory…');
+
+    try {
+      const res = await fetch(`${API}/ask`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ question: q }),
+      });
+
+      if (!res.ok) { thinkingSpan.textContent = 'Error calling API.'; return; }
+      if (res.headers.get('content-type')?.includes('event-stream')) {
+        // Streaming
+        thinkingSpan.textContent = '';
+        let sources = [];
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buf = '';
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+          const lines = buf.split('\n');
+          buf = lines.pop();
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const data = JSON.parse(line.slice(6));
+            if (data.token) thinkingSpan.textContent += data.token;
+            if (data.done && data.sources) sources = data.sources;
+          }
+        }
+        // Add sources below
+        if (sources.length) {
+          const srcDiv = document.createElement('div');
+          srcDiv.className = 'msg-sources';
+          srcDiv.innerHTML = `<b>From memory:</b><br>${sources.map(s => `• ${s.slice(0,120)}…`).join('<br>')}`;
+          thinkingSpan.parentElement.appendChild(srcDiv);
+        }
+      } else {
+        // Non-streaming fallback
+        const json = await res.json();
+        thinkingSpan.textContent = json.answer || JSON.stringify(json);
+      }
+    } catch(e) {
+      thinkingSpan.textContent = `Error: ${e.message}`;
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'Send';
+      document.getElementById('messages').scrollTop = 99999;
+    }
+  }
+
+  // ── Study ──
+  async function studyText() {
+    const text = document.getElementById('study-text').value.trim();
+    const topic = document.getElementById('text-topic').value.trim() || 'default';
+    if (!text) { toast('Enter some text first.', 'error'); return; }
+    setBtnLoading('btn-study-text', true, 'Storing…');
+    try {
+      const res = await fetch(`${API}/study/text`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ text, topic }),
+      });
+      const json = await res.json();
+      if (res.ok) {
+        toast('✅ ' + json.message, 'success');
+        document.getElementById('study-text').value = '';
+        addTopic(topic);
+      } else {
+        toast(json.detail || 'Error storing text.', 'error');
+      }
+    } catch(e) { toast('Network error: ' + e.message, 'error'); }
+    finally { setBtnLoading('btn-study-text', false, 'Store in Memory'); }
+  }
+
+  async function uploadFile(file) {
+    if (!file) return;
+    document.getElementById('file-label').textContent = `📎 ${file.name}`;
+    const topic = document.getElementById('file-topic').value.trim() || 'default';
+    toast('⏳ Uploading…', 'info');
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('topic', topic);
+      const res = await fetch(`${API}/study/file`, { method: 'POST', body: fd });
+      const json = await res.json();
+      if (res.ok) { toast('✅ ' + json.message, 'success'); addTopic(topic); }
+      else toast(json.detail || 'Upload error.', 'error');
+    } catch(e) { toast('Network error: ' + e.message, 'error'); }
+  }
+
+  function handleFileDrop(e) {
+    e.preventDefault();
+    document.getElementById('file-drop').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) uploadFile(file);
+  }
+
+  async function studyUrl() {
+    const url = document.getElementById('study-url').value.trim();
+    const topic = document.getElementById('url-topic').value.trim() || 'default';
+    if (!url) { toast('Enter a URL.', 'error'); return; }
+    setBtnLoading('btn-study-url', true, 'Fetching…');
+    try {
+      const fd = new FormData();
+      fd.append('url', url);
+      fd.append('topic', topic);
+      const res = await fetch(`${API}/study/url`, { method: 'POST', body: fd });
+      const json = await res.json();
+      if (res.ok) {
+        toast('✅ ' + json.message, 'success');
+        document.getElementById('study-url').value = '';
+        addTopic(topic);
+      } else {
+        toast(json.detail || 'Could not fetch URL.', 'error');
+      }
+    } catch(e) { toast('Network error: ' + e.message, 'error'); }
+    finally { setBtnLoading('btn-study-url', false, 'Fetch & Store'); }
+  }
+
+  // ── Improve ──
+  async function improveMemory() {
+    const btn = document.getElementById('btn-improve');
+    btn.innerHTML = '<span class="icon">⏳</span> Enriching…';
+    btn.disabled = true;
+    try {
+      await fetch(`${API}/improve`, { method:'POST' });
+      toast('Memory graph enriched!', 'success');
+    } catch(e) { toast('Improve failed.', 'error'); }
+    finally {
+      btn.innerHTML = '<span class="icon">⚡</span> Enrich Graph';
+      btn.disabled = false;
+    }
+  }
+
+  // ── Forget ──
+  async function forgetAll() {
+    if (!confirm('Erase ALL memory? This cannot be undone.')) return;
+    const res = await fetch(`${API}/forget`, {
+      method: 'DELETE', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ everything: true }),
+    });
+    const json = await res.json();
+    if (res.ok) {
+      localStorage.removeItem(TOPICS_KEY);
+      renderTopics();
+    }
+    toast(json.message, res.ok ? 'success' : 'error');
+  }
+
+  // ── Init ──
+  renderTopics();
+
+  // ── Quiz ──
+  async function generateQuiz() {
+    const topic = document.getElementById('quiz-topic').value.trim();
+    const count = parseInt(document.getElementById('quiz-count').value) || 5;
+    if (!topic) { toast('Enter a topic.', 'error'); return; }
+
+    setBtnLoading('btn-gen-quiz', true, 'Generating…');
+    document.getElementById('quiz-questions').innerHTML = `
+      <div style="color:var(--text2);padding:16px;display:flex;align-items:center;gap:10px">
+        <span class="spinner" style="border-top-color:var(--accent);border-color:rgba(79,142,247,0.2)"></span>
+        Searching memory and crafting questions…
+      </div>`;
+    document.getElementById('quiz-score-bar').classList.add('hidden');
+
+    try {
+      const res = await fetch(`${API}/quiz`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ topic, count }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        toast(json.detail || 'Quiz generation failed.', 'error');
+        document.getElementById('quiz-questions').innerHTML =
+          `<div style="color:var(--red);padding:16px">⚠️ ${json.detail || 'Failed to generate quiz. Make sure you\'ve studied this topic first.'}</div>`;
+        return;
+      }
+      quizData = json.questions;
+      quizAnswers = {};
+      renderQuiz();
+    } catch(e) {
+      toast('Network error: ' + e.message, 'error');
+      document.getElementById('quiz-questions').innerHTML = '';
+    } finally {
+      setBtnLoading('btn-gen-quiz', false, 'Generate Quiz');
+    }
+  }
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-questions');
+    container.innerHTML = '';
+    quizData.forEach((q, qi) => {
+      const div = document.createElement('div');
+      div.className = 'quiz-question';
+      div.innerHTML = `<p>Q${qi+1}. ${q.question}</p><div class="quiz-options">${q.options.map((opt,oi) => `<div class="quiz-option" onclick="selectOption(${qi},${oi},'${q.answer}')">${opt}</div>`).join('')}</div>`;
+      container.appendChild(div);
+    });
+    updateScore();
+  }
+
+  function selectOption(qi, oi, correct) {
+    const container = document.getElementById('quiz-questions');
+    const qDiv = container.querySelectorAll('.quiz-question')[qi];
+    const opts = qDiv.querySelectorAll('.quiz-option');
+    if (qDiv.classList.contains('revealed')) return;
+    qDiv.classList.add('revealed');
+
+    const selected = opts[oi].textContent.trim()[0]; // "A", "B", etc.
+    opts.forEach(o => {
+      const letter = o.textContent.trim()[0];
+      if (letter === correct) o.classList.add('correct');
+      else if (letter === selected && selected !== correct) o.classList.add('wrong');
+    });
+
+    quizAnswers[qi] = selected === correct;
+    updateScore();
+  }
+
+  function updateScore() {
+    const total = quizData.length;
+    const answered = Object.keys(quizAnswers).length;
+    const correct = Object.values(quizAnswers).filter(Boolean).length;
+    const scoreBar = document.getElementById('quiz-score-bar');
+
+    if (answered > 0) {
+      scoreBar.classList.remove('hidden');
+      document.getElementById('score-num').textContent = `${correct}/${answered}`;
+      document.getElementById('score-label').textContent = `${answered} of ${total} answered`;
+    }
+  }
+
+  // ── Memory Graph (D3 force-directed) ──
+  function loadGraph() {
+    // Wait one frame so panel-graph is fully laid out before reading dimensions
+    requestAnimationFrame(() => _renderGraph());
+  }
+
+  async function _renderGraph() {
+    document.getElementById('graph-node-count').textContent = 'Loading…';
+    const svg = document.getElementById('graph-svg');
+    svg.innerHTML = '';
+
+    let data;
+    try {
+      const res = await fetch(`${API}/graph`);
+      data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Failed to load graph');
+    } catch(e) {
+      document.getElementById('graph-node-count').textContent = 'Error';
+      toast('Graph load failed: ' + e.message, 'error');
+      return;
+    }
+
+    const { nodes, links } = data;
+    document.getElementById('graph-node-count').textContent =
+      `${nodes.length} nodes · ${links.length} edges`;
+
+    if (nodes.length === 0) {
+      svg.innerHTML = `<text x="50%" y="50%" text-anchor="middle" fill="#8892a4" font-size="14" font-family="Inter,sans-serif">No memory yet — study something first!</text>`;
+      return;
+    }
+
+    // Build legend
+    const types = [...new Set(nodes.map(n => n.type))];
+    document.getElementById('graph-legend').innerHTML = types.map(t => {
+      const color = nodes.find(n => n.type === t)?.color || '#64748b';
+      return `<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span><span style="color:#8892a4">${t}</span></div>`;
+    }).join('');
+
+    // Read dimensions from the container div (always has reliable size)
+    const container_el = document.getElementById('graph-container');
+    const W = container_el.clientWidth  || 900;
+    const H = container_el.clientHeight || 600;
+    // Also set explicit SVG size so D3 centering works correctly
+    svg.setAttribute('width',  W);
+    svg.setAttribute('height', H);
+
+    const tooltip = document.getElementById('graph-tooltip');
+    const d3 = window.d3;
+    const svgEl = d3.select(svg);
+    const container = svgEl.append('g');
+
+    // Zoom behaviour — also used to programmatically fit the graph
+    const zoom = d3.zoom().scaleExtent([0.05, 4]).on('zoom', e => {
+      container.attr('transform', e.transform);
+    });
+    svgEl.call(zoom);
+
+    // Links
+    const link = container.append('g').selectAll('line')
+      .data(links).join('line')
+      .attr('stroke', '#2e3347').attr('stroke-width', 1.2).attr('stroke-opacity', 0.7);
+
+    // Link labels (only show if < 80 edges to avoid clutter)
+    const linkLabel = container.append('g').selectAll('text')
+      .data(links.length < 80 ? links : []).join('text')
+      .text(d => d.relation)
+      .attr('font-size', 8).attr('fill', '#4a5568')
+      .attr('text-anchor', 'middle').attr('pointer-events', 'none');
+
+    // Nodes
+    const node = container.append('g').selectAll('circle')
+      .data(nodes).join('circle')
+      .attr('r', d => d.type === 'Entity' ? 10 : d.type === 'DocumentChunk' ? 8 : 7)
+      .attr('fill', d => d.color)
+      .attr('stroke', '#0f1117').attr('stroke-width', 1.5)
+      .style('cursor', 'pointer')
+      .on('mouseover', (e, d) => {
+        tooltip.style.opacity = 1;
+        tooltip.innerHTML = `<b>${d.type}</b><br>${d.label}`;
+        tooltip.style.left = (e.offsetX + 12) + 'px';
+        tooltip.style.top  = (e.offsetY - 10) + 'px';
+      })
+      .on('mousemove', e => {
+        tooltip.style.left = (e.offsetX + 12) + 'px';
+        tooltip.style.top  = (e.offsetY - 10) + 'px';
+      })
+      .on('mouseout', () => { tooltip.style.opacity = 0; })
+      .call(d3.drag()
+        .on('start', (e, d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+        .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+        .on('end',   (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }));
+
+    // Node labels
+    const label = container.append('g').selectAll('text')
+      .data(nodes).join('text')
+      .text(d => d.label.length > 20 ? d.label.slice(0, 20) + '…' : d.label)
+      .attr('font-size', 9).attr('fill', '#cbd5e1')
+      .attr('text-anchor', 'middle').attr('dy', 20)
+      .attr('pointer-events', 'none');
+
+    const sim = d3.forceSimulation(nodes)
+      .force('link',      d3.forceLink(links).id(d => d.id).distance(90))
+      .force('charge',    d3.forceManyBody().strength(-220))
+      .force('center',    d3.forceCenter(W / 2, H / 2))
+      .force('collision', d3.forceCollide(22))
+      .on('tick', () => {
+        link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+        linkLabel.attr('x', d => (d.source.x + d.target.x) / 2)
+                 .attr('y', d => (d.source.y + d.target.y) / 2 - 3);
+        node.attr('cx', d => d.x).attr('cy', d => d.y);
+        label.attr('x', d => d.x).attr('y', d => d.y);
+      })
+      .on('end', () => {
+        // Auto-fit using 5th–95th percentile bounds to ignore stray outlier nodes
+        const xs = nodes.map(n => n.x).sort((a,b) => a-b);
+        const ys = nodes.map(n => n.y).sort((a,b) => a-b);
+        const p  = p => Math.floor(p * xs.length);
+        const x0 = xs[p(0.05)] - 50,  x1 = xs[p(0.95)] + 50;
+        const y0 = ys[p(0.05)] - 50,  y1 = ys[p(0.95)] + 50;
+        const scale = Math.min(0.9, Math.min(W / (x1 - x0), H / (y1 - y0)));
+        const tx = W / 2 - scale * (x0 + x1) / 2;
+        const ty = H / 2 - scale * (y0 + y1) / 2;
+        svgEl.transition().duration(700)
+          .call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+      });
+  }
+
+  // Patch switchMode to load graph when switching to it
+  const _origSwitch = switchMode;
+  window.switchMode = function(mode) {
+    // Handle graph panel manually since it's outside the original 3
+    ['chat','study','quiz','graph'].forEach(m => {
+      const p = document.getElementById(`panel-${m}`);
+      const b = document.getElementById(`btn-${m}`);
+      if (p) p.style.display = 'none';
+      if (b) b.classList.remove('active');
+    });
+    const panel = document.getElementById(`panel-${mode}`);
+    const btn   = document.getElementById(`btn-${mode}`);
+    if (panel) panel.style.display = 'flex';
+    if (btn)   btn.classList.add('active');
+
+    const titles = {
+      chat:  ['Ask Memory',    'Chat with your knowledge'],
+      study: ['Study',         'Feed notes into memory'],
+      quiz:  ['Quiz Me',       'Test what you know'],
+      graph: ['Memory Graph',  'Visualize your knowledge graph'],
+    };
+    const t = titles[mode] || [mode, ''];
+    document.getElementById('topbar-title').textContent  = t[0];
+    document.getElementById('topbar-badge').textContent  = t[1];
+
+    if (mode === 'graph') loadGraph();
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+</body>
+</html>

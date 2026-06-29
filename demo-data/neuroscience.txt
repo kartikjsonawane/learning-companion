@@ -1,0 +1,13 @@
+The Human Brain and Biological Learning
+
+The human brain contains approximately 86 billion neurons, each connected to thousands of others via synapses. Learning occurs through synaptic plasticity — the ability of synapses to strengthen or weaken over time based on activity. This principle is captured by Hebb's rule: "neurons that fire together, wire together."
+
+When we learn something new, long-term potentiation (LTP) strengthens the synaptic connections between co-activated neurons. Repeated activation causes structural changes — new synaptic connections form, and existing ones grow stronger. This is the biological basis of memory consolidation.
+
+The hippocampus plays a critical role in converting short-term memories into long-term ones. The prefrontal cortex handles working memory and executive function. The amygdala encodes emotional memories and influences which memories are prioritized for storage.
+
+Neurotransmitters like dopamine and serotonin regulate mood, attention, and motivation — all of which affect learning efficiency. Dopamine in particular acts as a reward signal: when an action leads to a positive outcome, dopamine release reinforces the neural pathways responsible for that action.
+
+Sleep is essential for memory consolidation. During slow-wave sleep, the hippocampus replays experiences and transfers them to the neocortex for long-term storage. This offline processing is why sleep-deprived students retain less information.
+
+The brain exhibits neuroplasticity throughout life — it can reorganize itself by forming new neural connections in response to learning, experience, or injury. This challenges the old belief that the adult brain is fixed and static.

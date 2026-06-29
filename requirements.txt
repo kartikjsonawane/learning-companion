@@ -1,0 +1,13 @@
+# Core memory layer
+cognee[groq,fastembed]
+
+# Web framework
+fastapi
+uvicorn[standard]
+python-multipart
+
+# HTTP client (for URL fetching)
+httpx
+
+# Env management
+python-dotenv
