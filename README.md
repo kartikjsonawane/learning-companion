@@ -2,7 +2,7 @@
 
 > A personal AI study assistant powered by **Cognee's persistent memory layer** — study anything, ask questions, take quizzes, and watch your knowledge graph grow.
 
-Built by **Kush** for the **WeMakeDevs × Cognee Hackathon** (June–July 2026).
+Built by **Kartik Sonawane** for the **WeMakeDevs × Cognee Hackathon** (June–July 2026).
 
 ---
 
@@ -184,4 +184,4 @@ The graph endpoint (`GET /graph`) calls `cognee.export()` which returns a `Graph
 
 ## About
 
-Built by Kush for the [WeMakeDevs × Cognee Hackathon](https://cognee.ai/hackathon) (June 29 – July 5, 2026).
+Built by Kartik Sonawane for the [WeMakeDevs × Cognee Hackathon](https://cognee.ai/hackathon) (June 29 – July 5, 2026).
