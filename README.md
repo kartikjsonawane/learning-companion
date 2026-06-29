@@ -2,7 +2,7 @@
 
 > A personal AI study assistant powered by **Cognee's persistent memory layer** — study anything, ask questions, take quizzes, and watch your knowledge graph grow.
 
-Built for the **WeMakeDevs × Cognee Hackathon** (June–July 2026).
+Built by **Kush** for the **WeMakeDevs × Cognee Hackathon** (June–July 2026).
 
 ---
 
@@ -182,10 +182,6 @@ The graph endpoint (`GET /graph`) calls `cognee.export()` which returns a `Graph
 
 ---
 
-## Hackathon context
+## About
 
-This project was built for the [WeMakeDevs × Cognee Hackathon](https://cognee.ai/hackathon) (June 29 – July 5, 2026).
-
-**Prize tracks targeted:**
-- 🥇 Main: Best project built with Cognee
-- 🛠️ PR track: Memory Graph visualization (contributes to Cognee issue #3642)
+Built by Kush for the [WeMakeDevs × Cognee Hackathon](https://cognee.ai/hackathon) (June 29 – July 5, 2026).
