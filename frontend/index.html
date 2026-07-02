@@ -802,9 +802,10 @@
     btn.innerHTML = '<span class="icon">⏳</span> Enriching…';
     btn.disabled = true;
     try {
-      await fetch(`${API}/improve`, { method:'POST' });
-      toast('Memory graph enriched!', 'success');
-    } catch(e) { toast('Improve failed.', 'error'); }
+      const res = await fetch(`${API}/improve`, { method:'POST' });
+      const json = await res.json();
+      toast(json.message || 'Memory graph enriched!', res.ok ? 'success' : 'error');
+    } catch(e) { toast('Improve failed: ' + e.message, 'error'); }
     finally {
       btn.innerHTML = '<span class="icon">⚡</span> Enrich Graph';
       btn.disabled = false;
@@ -814,16 +815,23 @@
   // ── Forget ──
   async function forgetAll() {
     if (!confirm('Erase ALL memory? This cannot be undone.')) return;
-    const res = await fetch(`${API}/forget`, {
-      method: 'DELETE', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ everything: true }),
-    });
-    const json = await res.json();
-    if (res.ok) {
-      localStorage.removeItem(TOPICS_KEY);
-      renderTopics();
+    const dangerBtn = document.querySelector('.danger-btn');
+    if (dangerBtn) { dangerBtn.disabled = true; dangerBtn.innerHTML = '<span class="icon">⏳</span> Erasing…'; }
+    try {
+      const res = await fetch(`${API}/forget`, {
+        method: 'DELETE', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ everything: true }),
+      });
+      const json = await res.json();
+      if (res.ok) {
+        localStorage.removeItem(TOPICS_KEY);
+        renderTopics();
+      }
+      toast(json.message, res.ok ? 'success' : 'error');
+    } catch(e) { toast('Network error: ' + e.message, 'error'); }
+    finally {
+      if (dangerBtn) { dangerBtn.disabled = false; dangerBtn.innerHTML = '<span class="icon">🗑️</span> Forget Everything'; }
     }
-    toast(json.message, res.ok ? 'success' : 'error');
   }
 
   // ── Init ──

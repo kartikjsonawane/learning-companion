@@ -1,6 +1,6 @@
 """
 Learning Companion — FastAPI Backend
-Run with: uvicorn backend.main:app --reload --port 8000
+Run with: uvicorn backend.main:app --reload --port 8001
 """
 
 from fastapi import FastAPI
