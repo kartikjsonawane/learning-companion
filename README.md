@@ -1,8 +1,19 @@
 # 📚 Learning Companion
 
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)
+![Cognee](https://img.shields.io/badge/memory-Cognee-6f42c1.svg)
+
 > A personal AI study assistant powered by **Cognee's persistent memory layer** — study anything, ask questions, take quizzes, and watch your knowledge graph grow.
 
-Built by **Kartik Sonawane** for the **WeMakeDevs × Cognee Hackathon** (June–July 2026).
+Built by **Kartik Sonawane** for the **WeMakeDevs × Cognee Hackathon** ("The Hangover Part AI: Where's My Context?", June 29 – July 5, 2026).
+
+---
+
+## Demo
+
+![Memory graph visualization](demo-data/memory-graph-screenshot.png)
+*The D3.js force-directed memory graph, built from `cognee.export()` — nodes are entities, documents, and chunks; edges are the relationships Cognee inferred.*
 
 ---
 
@@ -184,4 +195,16 @@ The graph endpoint (`GET /graph`) calls `cognee.export()` which returns a `Graph
 
 ## About
 
-Built by Kartik Sonawane for the [WeMakeDevs × Cognee Hackathon](https://cognee.ai/hackathon) (June 29 – July 5, 2026).
+Built by Kartik Sonawane for the [WeMakeDevs × Cognee Hackathon](https://www.wemakedevs.org/hackathons/cognee) (June 29 – July 5, 2026).
+
+---
+
+## AI-assistant disclosure
+
+Per the hackathon rules, disclosing AI assistant use is required. Claude was used during development to help with code scaffolding, debugging, and documentation (including this README). All architecture decisions, the Cognee integration design, and testing were done by the author.
+
+---
+
+## License
+
+[MIT](LICENSE)
