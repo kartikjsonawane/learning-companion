@@ -6,13 +6,23 @@
 
 > A personal AI study assistant powered by **Cognee's persistent memory layer** — study anything, ask questions, take quizzes, and watch your knowledge graph grow.
 
-Built by **Kartik Sonawane** for the **WeMakeDevs × Cognee Hackathon** ("The Hangover Part AI: Where's My Context?", June 29 – July 5, 2026).
+**By Kartik Sonawane** — built for the **WeMakeDevs × Cognee Hackathon** ("The Hangover Part AI: Where's My Context?", June 29 – July 5, 2026).
 
 ---
 
 ## Demo
 
-![Memory graph visualization](demo-data/memory-graph-screenshot.png)
+**Study — feed notes in via text, file upload, or URL**
+![Study tab](demo-data/screenshot-study.png)
+
+**Ask Memory — grounded Q&A over what you've studied**
+![Ask Memory tab](demo-data/screenshot-ask-memory.png)
+
+**Quiz Me — auto-generated MCQs with scoring**
+![Quiz Me tab](demo-data/screenshot-quiz.png)
+
+**Memory Graph — the knowledge graph, growing with every topic**
+![Memory graph visualization](demo-data/screenshot-memory-graph.png)
 *The D3.js force-directed memory graph, built from `cognee.export()` — nodes are entities, documents, and chunks; edges are the relationships Cognee inferred.*
 
 ---
